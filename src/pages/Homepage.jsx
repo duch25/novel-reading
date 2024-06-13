@@ -842,7 +842,7 @@ function Homepage() {
           <NovelGroup novels={history} type="list" />
 
           <div className="self-end">
-            <LinkButton to="history">Xem thêm &rarr;</LinkButton>
+            <LinkButton to="reading-history">Xem thêm &rarr;</LinkButton>
           </div>
         </Section>
       </div>
