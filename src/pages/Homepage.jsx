@@ -1,7 +1,7 @@
 import Title from '../ui/Title';
 import NovelGroup from '../ui/NovelGroup';
-import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import Section from '../ui/Section';
+import LinkButton from '../ui/LinkButton';
 
 const hotNovels = [
   {
@@ -811,7 +811,7 @@ function Homepage() {
       />
       <div className="mt-5 grid grid-cols-[1fr_200px] items-start gap-x-8">
         <div>
-          <section className="pb-12">
+          <Section>
             <Title>
               <ion-icon
                 class="title-icon"
@@ -820,9 +820,9 @@ function Homepage() {
               Truyện hot
             </Title>
             <NovelGroup novels={hotNovels} type="grid" />
-          </section>
+          </Section>
 
-          <section className="pb-12">
+          <Section>
             <Title>
               <ion-icon
                 class="title-icon"
@@ -831,19 +831,20 @@ function Homepage() {
               Truyện hoàn thành
             </Title>
             <NovelGroup novels={completedNovels} type="grid" />
-          </section>
+          </Section>
         </div>
 
-        <div>
+        <Section>
           <Title>
             <ion-icon class="title-icon" name="book-outline"></ion-icon>
             Lịch sử
           </Title>
           <NovelGroup novels={history} type="list" />
-          <Link className="text-center" to="history">
-            Xem thêm
-          </Link>
-        </div>
+
+          <div className="self-end">
+            <LinkButton to="history">Xem thêm &rarr;</LinkButton>
+          </div>
+        </Section>
       </div>
     </>
   );
