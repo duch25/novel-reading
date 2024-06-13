@@ -5,7 +5,7 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     fontFamily: {
-      sans: "Roboto, monospace",
+      sans: "Roboto, sans-serif",
     },
 
     extend: {
