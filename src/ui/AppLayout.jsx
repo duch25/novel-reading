@@ -8,12 +8,12 @@ function AppLayout() {
       <Header />
 
       <div className="overflow-y-scroll">
-        <main className="mx-auto max-w-3xl">
+        <main className="mx-auto max-w-6xl">
           <Outlet />
         </main>
-      </div>
 
-      <Footer />
+        <Footer />
+      </div>
     </div>
   );
 }
