@@ -18,7 +18,7 @@ function App() {
             <Route path="genres/:id" element={<NovelsByGenre />} />
             <Route path="novels/:id" element={<NovelDetails />} />
             <Route path="reading/:id" element={<NovelReading />} />
-            <Route path="history" element={<ReadingHistory />} />
+            <Route path="reading-history" element={<ReadingHistory />} />
           </Route>
 
           <Route path="*" element={<PageNotFound />} />
