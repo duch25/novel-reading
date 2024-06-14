@@ -37,13 +37,16 @@
   }
 
   .spinner {
-    margin: 3.2rem auto 1.6rem;
+    margin: auto;
     width: 48px;
     aspect-ratio: 1;
     border-radius: 50%;
     border: 8px solid #1b2631;
     border-right-color: #b7c7d7;
     animation: rotate 1s infinite linear;
+    position: absolute;
+    top: 49%;
+    left: 49%;
   }
 
   .spinner-mini {
