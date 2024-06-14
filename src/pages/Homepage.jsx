@@ -828,7 +828,7 @@ function Homepage() {
                 class="title-icon"
                 name="checkmark-done-outline"
               ></ion-icon>
-              Truyện hoàn thành
+              Truyện đã hoàn thành
             </Title>
             <NovelGroup novels={completedNovels} type="grid" />
           </Section>
