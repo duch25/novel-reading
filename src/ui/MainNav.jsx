@@ -1,5 +1,6 @@
-import Dropdown from './Dropdown';
 import { useNavigateItems } from '../context/NavigateItemContext';
+import DropdownGenres from './DropdownGenres';
+import DropdownSources from './DropdownSources';
 
 function MainNav() {
   const { hoveredItem, handleHoveringNavItem, handleLeaveNavItem } =
@@ -14,7 +15,7 @@ function MainNav() {
           className="cursor-pointer text-lg font-medium hover:text-gray-400"
         >
           Thể loại
-          {hoveredItem === 'genre' && <Dropdown />}
+          {hoveredItem === 'genre' && <DropdownGenres />}
         </li>
         <li
           onMouseOver={() => handleHoveringNavItem('source')}
@@ -22,7 +23,7 @@ function MainNav() {
           className="cursor-pointer text-lg font-medium hover:text-gray-400"
         >
           Nguồn truyện
-          {hoveredItem === 'source' && <Dropdown />}
+          {hoveredItem === 'source' && <DropdownSources />}
         </li>
       </ul>
     </nav>
