@@ -1,92 +1,48 @@
 /* eslint-disable react/prop-types */
-import { createContext, useReducer, useContext } from 'react';
+import { createContext, useReducer, useContext, useEffect } from 'react';
 
-const genres = [
-  {
-    Id: 'tien-hiep',
-    Name: 'Tiên Hiệp',
-  },
-  {
-    Id: 'huyen-huyen',
-    Name: 'Huyền Huyễn',
-  },
-  {
-    Id: 'do-thi',
-    Name: 'Đô Thị',
-  },
-  {
-    Id: 'khoa-huyen',
-    Name: 'Khoa Huyễn',
-  },
-  {
-    Id: 'ky-huyen',
-    Name: 'Kỳ Huyễn',
-  },
-  {
-    Id: 'vo-hiep',
-    Name: 'Võ Hiệp',
-  },
-  {
-    Id: 'lich-su',
-    Name: 'Lịch Sử',
-  },
-  {
-    Id: 'dong-nhan',
-    Name: 'Đồng Nhân',
-  },
-  {
-    Id: 'quan-su',
-    Name: 'Quân Sự',
-  },
-  {
-    Id: 'du-hi',
-    Name: 'Du Hí',
-  },
-  {
-    Id: 'canh-ky',
-    Name: 'Cạnh Kỹ',
-  },
-  {
-    Id: 'linh-di',
-    Name: 'Linh Dị',
-  },
-];
-
-const sources = [
-  {
-    Id: 'truyen.tangthuvien.vn',
-  },
-  {
-    Id: 'truyenfull.vn',
-  },
-  {
-    Id: 'dtruyen.com',
-  },
-];
+import { getAllGenres } from '../services/apiGenres';
+import { getAllSources, reorderSources } from '../services/apiNovels';
 
 const NavigateItemsContext = createContext();
 
 const initialState = {
   hoveredItem: '',
-  selectedSource: 'truyenfull.vn',
+  curSources: [],
+  genres: [],
+  isLoading: false,
+  isSourceChanged: false,
 };
 
 function reducer(state, action) {
   switch (action.type) {
+    case 'loading':
+      return { ...state, loading: true };
     case 'hover':
       return { ...state, hoveredItem: action.payload };
     case 'leave':
       return { ...state, hoveredItem: '' };
+    case 'genres/loaded':
+      return { ...state, isLoading: false, genres: action.payload };
+    case 'sources/loaded':
+      return {
+        ...state,
+        isLoading: false,
+        curSources: action.payload,
+        isSourceChanged: false,
+      };
+    case 'sources/reorder':
+      return { ...state, curSources: action.payload, isSourceChanged: true };
     default:
       throw new Error('Unknown action type');
   }
 }
 
 function NavigateItemsProvider({ children }) {
-  const [{ hoveredItem, selectedSource }, dispatch] = useReducer(
-    reducer,
-    initialState,
-  );
+  const [
+    { hoveredItem, curSources, genres, isLoading, isSourceChanged },
+    dispatch,
+  ] = useReducer(reducer, initialState);
 
   const handleHoveringNavItem = itemName => {
     dispatch({ type: 'hover', payload: itemName });
@@ -96,24 +52,63 @@ function NavigateItemsProvider({ children }) {
     dispatch({ type: 'leave' });
   };
 
-  const handleSelectSource = source => {
-    dispatch({ type: 'selectSource', payload: source });
+  const handleReorderSources = newOrderSources => {
+    dispatch({ type: 'sources/reorder', payload: newOrderSources });
   };
 
-  // useEffect(function () {
-  //   async function getGenres() {}
-  // }, []);
+  useEffect(
+    function () {
+      async function fetchReorderSources() {
+        let requestBody = [...curSources]?.map(source => source?.Id);
+        requestBody = { sources: requestBody };
+
+        const sources = await reorderSources(requestBody);
+      }
+
+      if (curSources.length === 0) return;
+
+      fetchReorderSources();
+    },
+    [curSources],
+  );
+
+  useEffect(
+    function () {
+      async function fetchGenres() {
+        dispatch({ type: 'loading' });
+
+        dispatch({ type: 'genres/loaded', payload: genres });
+      }
+
+      if (isSourceChanged === false && genres.length > 0) return;
+
+      fetchGenres();
+    },
+    [isSourceChanged],
+  );
+
+  useEffect(function () {
+    async function fetchSources() {
+      dispatch({ type: 'loading' });
+
+      const sources = await getAllSources();
+
+      dispatch({ type: 'sources/loaded', payload: sources });
+    }
+
+    fetchSources();
+  }, []);
 
   return (
     <NavigateItemsContext.Provider
       value={{
         hoveredItem,
-        selectedSource,
+        curSources,
         handleHoveringNavItem,
         handleLeaveNavItem,
-        handleSelectSource,
-        sources,
+        handleReorderSources,
         genres,
+        isLoading,
       }}
     >
       {children}
