@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer components {
+  .preformatted {
+    white-space: pre-line;
+  }
+
   .footer-heading {
     @apply mb-8 text-lg font-medium;
   }
@@ -20,9 +24,11 @@
     width: 1rem;
     color: #888;
   }
+  .icon {
+    transform: translateY(2px);
+  }
 
   .search-icon {
-    transform: translateX(-1.5rem);
     color: #333;
     font-size: 18px;
   }
