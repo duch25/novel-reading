@@ -7,16 +7,18 @@ function Option({ option }) {
 
   if (hoveredItem === 'genre')
     return (
-      <Link to={`novels?genre=${option.Id}`}>
+      <Link
+        to={`novels/search?genre=${option.Id}&name=${option?.Name ? option?.Name : option?.Id}`}
+      >
         <li className="hover:text-rose-600" key={option}>
-          {option.Name ? option.Name : option.Id}
+          {option?.Name ? option?.Name : option?.Id}
         </li>
       </Link>
     );
 
   return (
     <li className="hover:text-rose-600" key={option}>
-      {option.Name ? option.Name : option.Id}
+      {option?.Name ? option?.Name : option?.Id}
     </li>
   );
 }
