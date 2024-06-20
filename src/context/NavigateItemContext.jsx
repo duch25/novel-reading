@@ -77,6 +77,8 @@ function NavigateItemsProvider({ children }) {
       async function fetchGenres() {
         dispatch({ type: 'loading' });
 
+        const genres = await getAllGenres();
+
         dispatch({ type: 'genres/loaded', payload: genres });
       }
 
