@@ -1,6 +1,6 @@
 import Logo from './Logo';
 import MainNav from './MainNav';
-import SearchNovels from './SearchNovels';
+import SearchNovels from '../features/search/SearchNovels';
 
 function Header() {
   return (
