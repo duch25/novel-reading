@@ -40,8 +40,6 @@ function NovelDetails() {
         novelId={id}
         type="maximum"
       />
-      {/* <Pagination totalPages={totalPages} /> */}
-      {/* <PaginatedItems pageCount={chapters.length} /> */}
     </div>
   );
 }
@@ -52,12 +50,9 @@ function NovelDescription({ novel }) {
     Title: title,
     Rate: rate,
     Author: authors,
-    Genre: genres,
     CoverImage: coverImage,
     Description: description,
     Status: status,
-    Chapters: chapters,
-    LatestChapter: latestChapter,
   } = novel || {};
 
   const navigate = useNavigate();
@@ -122,15 +117,4 @@ function NovelDescription({ novel }) {
   );
 }
 
-function Pagination({ totalPages }) {
-  const paginEl = Array.from({ length: totalPages }, (_, i) => i + 1);
-  console.log(paginEl);
-  return (
-    <ul>
-      {paginEl.map(el => (
-        <li key={el}>{el}</li>
-      ))}
-    </ul>
-  );
-}
 export default NovelDetails;
