@@ -20,21 +20,21 @@ function Homepage() {
   );
 
   useEffect(function () {
-    async function getHomePageData() {
+    async function fetchHomePageData() {
       setIsLoading(true);
 
-      const hotNovelsData = await getAllNovels({ category: 'truyen-hot' });
-      setHotNovels(hotNovelsData);
+      const [hotNovels, completedNovels] = await Promise.all([
+        getAllNovels({ category: 'truyen-hot' }),
+        getAllNovels({ category: 'truyen-hoan-thanh' }),
+      ]);
 
-      const completedNovelsData = await getAllNovels({
-        category: 'truyen-hoan-thanh',
-      });
-      setCompletedNovels(completedNovelsData);
+      setHotNovels(hotNovels);
+      setCompletedNovels(completedNovels);
 
       setIsLoading(false);
     }
 
-    getHomePageData();
+    fetchHomePageData();
   }, []);
 
   if (isLoading) return <Spinner />;
