@@ -23,10 +23,10 @@ function Homepage() {
     async function fetchHomePageData() {
       setIsLoading(true);
 
-      const [hotNovels, completedNovels] = await Promise.all([
-        getAllNovels({ category: 'truyen-hot' }),
-        getAllNovels({ category: 'truyen-hoan-thanh' }),
-      ]);
+      const hotNovels = await getAllNovels({ category: 'truyen-hot' });
+      const completedNovels = await getAllNovels({
+        category: 'truyen-hoan-thanh',
+      });
 
       setHotNovels(hotNovels);
       setCompletedNovels(completedNovels);
