@@ -20,7 +20,10 @@ function App() {
               <Route path="novels" element={<Homepage />} />
               <Route path="novels/:id" element={<NovelDetails />} />
               <Route path="novels/search" element={<SearchResults />} />
-              <Route path="reading/:id/:chapter" element={<NovelReading />} />
+              <Route
+                path="reading/:novelId/:chapterId"
+                element={<NovelReading />}
+              />
               <Route path="reading-history" element={<ReadingHistory />} />
             </Route>
 
