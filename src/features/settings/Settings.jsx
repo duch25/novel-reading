@@ -19,12 +19,16 @@ function Settings() {
 }
 
 function SettingColor() {
-  const { handleChangeColor } = useSetting();
+  const { handleChangeColor, color } = useSetting();
 
   return (
     <div className="p-2">
       <h4 className="mb-1 font-semibold">Màu sắc</h4>
-      <input type="color" onChange={e => handleChangeColor(e.target.value)} />
+      <input
+        type="color"
+        value={color}
+        onChange={e => handleChangeColor(e.target.value)}
+      />
     </div>
   );
 }

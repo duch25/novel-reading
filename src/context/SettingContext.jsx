@@ -1,14 +1,8 @@
 /* eslint-disable react/prop-types */
 import { createContext, useReducer, useContext } from 'react';
+import { useLocalStorageState } from '../hooks/useLocalStorageState';
 
 const SettingContext = createContext();
-
-const initialState = {
-  fontSize: 16,
-  fontFamily: 'Roboto',
-  lineHeight: 1.5,
-  color: '#fff',
-};
 
 function reducer(state, action) {
   switch (action.type) {
@@ -26,33 +20,57 @@ function reducer(state, action) {
 }
 
 function SettingProvider({ children }) {
+  const [personalization, setPersonalization] = useLocalStorageState(
+    {
+      color: '#fff',
+      fontSize: 16,
+      fontFamily: 'Roboto',
+      lineHeight: 1.5,
+    },
+    'personalization',
+  );
+
+  const initialState = personalization;
   const [{ color, fontFamily, fontSize, lineHeight }, dispatch] = useReducer(
     reducer,
     initialState,
   );
 
   const handleChangeColor = color => {
+    let newPersonalization = { ...initialState, color: color };
+    setPersonalization(newPersonalization);
+
     dispatch({ type: 'color', payload: color });
   };
 
   const handleChangeFontFamily = fontFamily => {
+    let newPersonalization = { ...initialState, fontFamily: fontFamily };
+    setPersonalization(newPersonalization);
+
     dispatch({ type: 'fontFamily', payload: fontFamily });
   };
 
   const handleChangeFontSize = delta => {
-    let data = fontSize + delta;
-    if (data > 64) data = 64;
-    if (data < 12) data = 12;
+    let actualFontSize = fontSize + delta;
 
-    dispatch({ type: 'fontSize', payload: data });
+    if (actualFontSize > 64) actualFontSize = 64;
+    if (actualFontSize < 12) actualFontSize = 12;
+
+    let newPersonalization = { ...initialState, fontSize: actualFontSize };
+    setPersonalization(newPersonalization);
+
+    dispatch({ type: 'fontSize', payload: actualFontSize });
   };
 
   const handleChangeLineHeight = delta => {
-    let data = lineHeight + delta;
-    if (data > 2) data = 2;
-    if (data < 1) data = 1;
+    let actualLineHeight = lineHeight + delta;
+    if (actualLineHeight > 2) actualLineHeight = 2;
+    if (actualLineHeight < 1) actualLineHeight = 1;
 
-    dispatch({ type: 'lineHeight', payload: data });
+    let newPersonalization = { ...initialState, lineHeight: actualLineHeight };
+    setPersonalization(newPersonalization);
+
+    dispatch({ type: 'lineHeight', payload: actualLineHeight });
   };
 
   return (

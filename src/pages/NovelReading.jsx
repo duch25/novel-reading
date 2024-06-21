@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { getChapter } from '../services/apiNovels';
 import Spinner from '../ui/Spinner';
 import LinkButton from '../ui/LinkButton';
@@ -12,7 +12,7 @@ import Settings from '../features/settings/Settings';
 import { SettingProvider, useSetting } from '../context/SettingContext';
 
 function NovelReading() {
-  const { id, chapter } = useParams();
+  const { novelId, chapterId } = useParams();
   const [readingChapter, setReadingChapter] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
@@ -21,17 +21,17 @@ function NovelReading() {
       async function getChapterData() {
         setIsLoading(true);
 
-        const dataChapter = await getChapter(id, chapter);
+        const dataChapter = await getChapter(novelId, chapterId);
         setReadingChapter(dataChapter);
 
         setIsLoading(false);
       }
 
-      if (!id && !chapter) return;
+      if (!novelId && !chapterId) return;
 
       getChapterData();
     },
-    [id, chapter, setIsLoading],
+    [novelId, chapterId, setIsLoading],
   );
 
   return (
@@ -66,65 +66,17 @@ function ReadingHeader({ readingChapter }) {
 
 function NavigateChapter({ readingChapter }) {
   const [isOpen, setIsOpen] = useState(false);
+  const { novelId, chapterId } = useParams();
   const popupRef = useRef(null);
-
   const [readingHistory, setReadingHistory] = useLocalStorageState(
     [],
     'history',
   );
-  const navigate = useNavigate();
-  const { id } = useParams();
 
   const { novel, currentChapter, nextChapter, previousChapter } =
     readingChapter;
 
   const { Chapters: chapters } = novel || {};
-
-  const handleSavingReadingState = (chapterTitle, chapterId) => {
-    const newReading = {
-      latestChapterTitle: chapterTitle,
-      latestChapterId: chapterId,
-      novel: novel,
-    };
-
-    let newHistory = [];
-    let isExist = false;
-    for (let i = 0; i < readingHistory.length; ++i) {
-      if (readingHistory[i].novel.Id === id) {
-        newHistory.push(newReading);
-        isExist = true;
-      } else newHistory.push(readingHistory[i]);
-    }
-
-    if (isExist === false) {
-      newHistory.push(newReading);
-    }
-
-    setReadingHistory(newHistory);
-  };
-
-  const handleReadingNovel = (type, chapterTitle = '', chapterId = '') => {
-    let curChapter = null;
-    let readingChapter = null;
-
-    if (type === 'start') {
-      readingChapter = novel.Chapters[0].Id;
-      curChapter = novel.Chapters[0].Title;
-    } else if (type === 'random') {
-      curChapter = chapterTitle;
-    } else if (type === 'continue') {
-      readingChapter = novel.Chapters[0].Id;
-
-      for (let i = 0; i < readingHistory.length; ++i) {
-        if (readingHistory[i].novel.Id === id)
-          readingChapter = readingHistory[i].latestChapterId;
-      }
-    }
-
-    if (!chapterId) chapterId = readingChapter;
-    handleSavingReadingState(curChapter, chapterId);
-    navigate(`/reading/${id}/${readingChapter}`);
-  };
 
   const handleShowChapters = e => {
     if (e.target.tagName === 'SPAN') setIsOpen(isOpen => !isOpen);
@@ -135,6 +87,30 @@ function NavigateChapter({ readingChapter }) {
       setIsOpen(false);
     }
   };
+
+  // saving reading state to local storage
+  useEffect(() => {
+    const newReading = {
+      latestChapterTitle: currentChapter.Title,
+      latestChapterId: chapterId,
+      novel: novel,
+    };
+
+    let newHistory = [];
+    let isExist = false;
+    for (let i = 0; i < readingHistory.length; ++i) {
+      if (readingHistory[i].novel.Id === novel.Id) {
+        newHistory.unshift(newReading);
+        isExist = true;
+      } else newHistory.push(readingHistory[i]);
+    }
+
+    if (isExist === false) {
+      newHistory.unshift(newReading);
+    }
+
+    setReadingHistory(newHistory);
+  }, [novelId, chapterId, currentChapter.Title]);
 
   useEffect(() => {
     if (isOpen) {
@@ -168,8 +144,7 @@ function NavigateChapter({ readingChapter }) {
         <Chapters
           popupRef={popupRef}
           chapters={chapters}
-          id={id}
-          onReadingNovel={handleReadingNovel}
+          novelId={novel.Id}
           type="mini"
         />
       )}
@@ -179,6 +154,7 @@ function NavigateChapter({ readingChapter }) {
 
 function Content({ readingChapter }) {
   const [hoveredEl, setHoveredEl] = useState(false);
+
   const { currentChapter } = readingChapter;
 
   const { color, fontFamily, fontSize, lineHeight } = useSetting();
@@ -190,7 +166,8 @@ function Content({ readingChapter }) {
     lineHeight: lineHeight + 'rem',
   };
 
-  // console.log(style);
+  console.log(style);
+
   const handleHoverButton = async el => {
     setHoveredEl(el);
   };

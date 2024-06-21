@@ -4,20 +4,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getNovel } from '../services/apiNovels';
 import Spinner from '../ui/Spinner';
 import Button from '../ui/Button';
-import { useLocalStorageState } from '../hooks/useLocalStorageState';
 import Chapters from '../ui/Chapters';
+import { useLocalStorageState } from '../hooks/useLocalStorageState';
 
 function NovelDetails() {
   const { id } = useParams();
-
   const [novelObj, setNovelObj] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [readingHistory, setReadingHistory] = useLocalStorageState(
-    [],
-    'history',
-  );
-
-  const navigate = useNavigate();
 
   useEffect(
     function () {
@@ -37,65 +30,14 @@ function NovelDetails() {
     [id],
   );
 
-  const handleSavingReadingState = (chapterTitle, chapterId) => {
-    const newReading = {
-      latestChapterTitle: chapterTitle,
-      latestChapterId: chapterId,
-      novel: novelObj.novel,
-    };
-
-    let newHistory = [];
-    let isExist = false;
-    for (let i = 0; i < readingHistory.length; ++i) {
-      if (readingHistory[i].novel.Id === id) {
-        newHistory.push(newReading);
-        isExist = true;
-      } else newHistory.push(readingHistory[i]);
-    }
-
-    if (isExist === false) {
-      newHistory.push(newReading);
-    }
-
-    console.log(newHistory);
-    setReadingHistory(newHistory);
-  };
-
-  const handleReadingNovel = (type, chapterTitle = '', chapterId = '') => {
-    let curChapter = null;
-    let readingChapter = null;
-
-    if (type === 'start') {
-      readingChapter = novelObj.novel.Chapters[0].Id;
-      curChapter = novelObj.novel.Chapters[0].Title;
-    } else if (type === 'random') {
-      curChapter = chapterTitle;
-    } else if (type === 'continue') {
-      readingChapter = novelObj.novel.Chapters[0].Id;
-
-      for (let i = 0; i < readingHistory.length; ++i) {
-        if (readingHistory[i].novel.Id === id)
-          readingChapter = readingHistory[i].latestChapterId;
-      }
-    }
-
-    if (!chapterId) chapterId = readingChapter;
-    handleSavingReadingState(curChapter, chapterId);
-    navigate(`/reading/${id}/${readingChapter}`);
-  };
-
   return isLoading ? (
     <Spinner />
   ) : (
     <div className="m-auto my-10 max-w-5xl">
-      <NovelDescription
-        novel={novelObj?.novel}
-        onReadingNovel={handleReadingNovel}
-      />
+      <NovelDescription novel={novelObj?.novel} />
       <Chapters
         chapters={novelObj.novel?.Chapters}
-        id={id}
-        onReadingBook={handleReadingNovel}
+        novelId={id}
         type="maximum"
       />
       {/* <Pagination totalPages={totalPages} /> */}
@@ -104,8 +46,9 @@ function NovelDetails() {
   );
 }
 
-function NovelDescription({ novel, onReadingNovel }) {
+function NovelDescription({ novel }) {
   const {
+    Id: id,
     Title: title,
     Rate: rate,
     Author: authors,
@@ -116,6 +59,19 @@ function NovelDescription({ novel, onReadingNovel }) {
     Chapters: chapters,
     LatestChapter: latestChapter,
   } = novel || {};
+
+  const navigate = useNavigate();
+  const [readingHistory, setReadingHistory] = useLocalStorageState(
+    [],
+    'history',
+  );
+
+  let nextChapter = novel?.Chapters.at(0).Id;
+
+  for (let i = 0; i < readingHistory.length; ++i) {
+    if (readingHistory[i].novel.Id === id)
+      nextChapter = readingHistory[i].latestChapterId;
+  }
 
   return (
     <>
@@ -151,8 +107,12 @@ function NovelDescription({ novel, onReadingNovel }) {
           </div>
 
           <div className="flex justify-around text-sm">
-            <Button onClick={() => onReadingNovel('start')}>Đọc từ đầu</Button>
-            <Button onClick={() => onReadingNovel('continue')}>
+            <Button
+              onClick={() => navigate(`/reading/${id}/${novel.Chapters[0].Id}`)}
+            >
+              Đọc từ đầu
+            </Button>
+            <Button onClick={() => navigate(`/reading/${id}/${nextChapter}`)}>
               Đọc tiếp &rarr;
             </Button>
           </div>

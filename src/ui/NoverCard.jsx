@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 /* eslint-disable react/prop-types */
-function NovelCard({ novel, type, group }) {
+function NovelCard({ novel, type, group, category }) {
   let novelData = novel;
   if (group === 'history') novelData = novel.novel;
 
@@ -29,7 +29,16 @@ function NovelCard({ novel, type, group }) {
               {title?.length > 68 ? title?.slice(0, 67) + '...' : title}
             </h3>
             <p className="text-xs font-medium">
-              {authors?.map(author => author.Name).join(', ')}
+              {category === 'history' ? (
+                <>
+                  Đọc tiếp{' '}
+                  <span className="font-semibold">
+                    {novel.latestChapterTitle.split(':')[0]}
+                  </span>
+                </>
+              ) : (
+                authors?.map(author => author.Name).join(', ')
+              )}
             </p>
           </>
         )}
@@ -41,9 +50,8 @@ function NovelCard({ novel, type, group }) {
                 {title?.length > 30 ? title.slice(0, 30) + '...' : title}
               </h3>
               <p className="text-xs font-medium">
-                Đọc tiếp
+                Đọc tiếp{' '}
                 <span className="font-semibold">
-                  {' '}
                   {novel.latestChapterTitle.split(':')[0]}
                 </span>
               </p>

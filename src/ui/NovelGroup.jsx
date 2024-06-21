@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import NovelCard from './NoverCard';
 
-function NovelGroup({ novels, type, group }) {
+function NovelGroup({ novels, type, group, category }) {
   const base = 'py-3 ';
 
   const styles = {
@@ -12,7 +12,13 @@ function NovelGroup({ novels, type, group }) {
   return (
     <ul className={styles[type]}>
       {novels?.map(novel => (
-        <NovelCard novel={novel} key={novel.Id} type={type} group={group} />
+        <NovelCard
+          novel={novel}
+          key={novel.Id || novel.novel.Id}
+          type={type}
+          group={group}
+          category={category}
+        />
       ))}
     </ul>
   );

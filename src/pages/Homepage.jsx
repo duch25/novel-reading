@@ -19,6 +19,11 @@ function Homepage() {
     'history',
   );
 
+  const dataHistory = readingHistory.slice(
+    0,
+    readingHistory.length >= 5 ? 5 : readingHistory.length,
+  );
+
   useEffect(function () {
     async function fetchHomePageData() {
       setIsLoading(true);
@@ -57,7 +62,7 @@ function Homepage() {
             />
           </div>
 
-          <NovelsHistory novels={readingHistory} group="history" />
+          <NovelsHistory novels={dataHistory} group="history" />
         </div>
       </div>
     </>

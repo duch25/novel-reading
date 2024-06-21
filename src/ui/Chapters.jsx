@@ -1,7 +1,7 @@
 import LinkButton from './LinkButton';
 
 /* eslint-disable react/prop-types */
-function Chapters({ chapters, id, onReadingNovel, type = '', popupRef }) {
+function Chapters({ chapters, novelId, type = '', popupRef }) {
   return (
     <div
       ref={popupRef}
@@ -16,10 +16,7 @@ function Chapters({ chapters, id, onReadingNovel, type = '', popupRef }) {
         {chapters?.map(chapter => (
           <li key={chapter.Id}>
             <LinkButton
-              onClick={() =>
-                onReadingNovel('random', chapter.Title, chapter.Id)
-              }
-              to={`/reading/${id}/${chapter.Id}`}
+              to={`/reading/${novelId}/${chapter.Id}`}
               type="text"
               cate={type}
             >

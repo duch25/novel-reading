@@ -3,7 +3,7 @@ import Section from './Section';
 import Title from './Title';
 
 /* eslint-disable react/prop-types */
-function NovelsGrid({ novels, title, iconTitle }) {
+function NovelsGrid({ novels, title, iconTitle, category }) {
   return (
     <Section>
       <Title>
@@ -12,7 +12,14 @@ function NovelsGrid({ novels, title, iconTitle }) {
         )}
         {title}
       </Title>
-      <NovelGroup novels={novels} type="grid" />
+
+      {novels.length !== 0 ? (
+        <NovelGroup novels={novels} type="grid" category={category} />
+      ) : (
+        <div className="mt-64 text-center italic text-gray-500">
+          Dữ liệu trống
+        </div>
+      )}
     </Section>
   );
 }
