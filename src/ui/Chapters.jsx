@@ -1,9 +1,12 @@
 import LinkButton from './LinkButton';
 
 /* eslint-disable react/prop-types */
-function Chapters({ chapters, id, onReadingNovel, type = '' }) {
+function Chapters({ chapters, id, onReadingNovel, type = '', popupRef }) {
   return (
-    <div className={`${type === 'mini' && 'absolute inset-0 mt-16'}`}>
+    <div
+      ref={popupRef}
+      className={`chapters ${type === 'mini' && 'absolute inset-0 mt-16'}`}
+    >
       {type === 'maximum' && (
         <h3 className="mb-3 text-lg font-semibold">Danh sách chương</h3>
       )}

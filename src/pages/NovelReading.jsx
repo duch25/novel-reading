@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getChapter } from '../services/apiNovels';
 import Spinner from '../ui/Spinner';
@@ -34,8 +34,6 @@ function NovelReading() {
     [id, chapter, setIsLoading],
   );
 
-  // if (isLoading) return <Spinner />;
-
   return (
     <div className="mb-12 mt-6 flex flex-col items-center gap-10">
       {Object.keys(readingChapter).length !== 0 && (
@@ -68,17 +66,19 @@ function ReadingHeader({ readingChapter }) {
 
 function NavigateChapter({ readingChapter }) {
   const [isOpen, setIsOpen] = useState(false);
+  const popupRef = useRef(null);
+
   const [readingHistory, setReadingHistory] = useLocalStorageState(
     [],
     'history',
   );
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const { novel, currentChapter, nextChapter, previousChapter } =
     readingChapter;
 
   const { Chapters: chapters } = novel || {};
-  const { id } = useParams();
 
   const handleSavingReadingState = (chapterTitle, chapterId) => {
     const newReading = {
@@ -100,7 +100,6 @@ function NavigateChapter({ readingChapter }) {
       newHistory.push(newReading);
     }
 
-    console.log(newHistory);
     setReadingHistory(newHistory);
   };
 
@@ -131,6 +130,24 @@ function NavigateChapter({ readingChapter }) {
     if (e.target.tagName === 'SPAN') setIsOpen(isOpen => !isOpen);
   };
 
+  const handleClickOutside = e => {
+    if (!popupRef.current.contains(e.target)) {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
   return (
     <div
       className="relative flex cursor-pointer items-center gap-2 rounded-md bg-sky-50 px-3 py-2"
@@ -149,6 +166,7 @@ function NavigateChapter({ readingChapter }) {
       </Button>
       {isOpen && (
         <Chapters
+          popupRef={popupRef}
           chapters={chapters}
           id={id}
           onReadingNovel={handleReadingNovel}
