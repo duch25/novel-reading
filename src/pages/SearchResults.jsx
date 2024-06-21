@@ -41,22 +41,15 @@ function SearchResults() {
 
   return (
     <div className="mt-5">
-      {searchedNovels ? (
-        <>
-          {genre && (
-            <NovelsGrid title={`Thể loại ${name}`} novels={searchedNovels} />
-          )}
-          ;
-          {search && (
-            <NovelsGrid
-              title={`Kết quả tìm kiếm cho "${search}"`}
-              iconTitle="search-outline"
-              novels={searchedNovels}
-            />
-          )}
-        </>
-      ) : (
-        <div className="text-center">Oops! No novel founded!</div>
+      {genre && (
+        <NovelsGrid title={`Thể loại ${name}`} novels={searchedNovels} />
+      )}
+      {search && (
+        <NovelsGrid
+          title={`Kết quả tìm kiếm cho "${search}"`}
+          iconTitle="search-outline"
+          novels={searchedNovels}
+        />
       )}
     </div>
   );
