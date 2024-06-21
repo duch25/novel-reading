@@ -15,7 +15,7 @@ function NovelCard({ novel, type, group }) {
   const base = 'flex cursor-pointer justify-between bg-white p-4';
 
   const styles = {
-    grid: base + ' h-96 flex-col rounded-md shadow hover:shadow-xl',
+    grid: base + ' h-96 flex-col rounded-md shadow-lg hover:shadow-xl',
     list: base + ' h-36 gap-4',
   };
 
@@ -25,7 +25,9 @@ function NovelCard({ novel, type, group }) {
         {type === 'grid' && (
           <>
             <img src={coverImage} className="h-64 w-full" alt="novel cover" />
-            <h3 className="text-sm font-semibold">{title}</h3>
+            <h3 className="text-sm font-semibold">
+              {title?.length > 68 ? title?.slice(0, 67) + '...' : title}
+            </h3>
             <p className="text-xs font-medium">
               {authors?.map(author => author.Name).join(', ')}
             </p>
