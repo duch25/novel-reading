@@ -1,4 +1,3 @@
-import { json } from 'react-router-dom';
 import { API_URL } from '../utils/constants';
 
 export async function getAllNovels({ category, genre, page, search }) {
@@ -28,8 +27,8 @@ export async function getNovel(id) {
   return { novel, numPage };
 }
 
-export async function getChapter(id, chapter) {
-  const res = await fetch(`${API_URL}/novels/${id}/${chapter}`);
+export async function getChapter(novelId, chapterId) {
+  const res = await fetch(`${API_URL}/novels/${novelId}/${chapterId}`);
 
   if (!res.ok) throw Error('Failed getting chapter');
 
