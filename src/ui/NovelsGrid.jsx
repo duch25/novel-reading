@@ -13,10 +13,10 @@ function NovelsGrid({ novels, title, iconTitle, category }) {
         {title}
       </Title>
 
-      {novels.length !== 0 ? (
+      {novels?.length ? (
         <NovelGroup novels={novels} type="grid" category={category} />
       ) : (
-        <div className="mt-64 text-center italic text-gray-500">
+        <div className="mt-48 text-center italic text-gray-500">
           Dữ liệu trống
         </div>
       )}

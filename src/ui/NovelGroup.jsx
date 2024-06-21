@@ -14,7 +14,7 @@ function NovelGroup({ novels, type, group, category }) {
       {novels?.map(novel => (
         <NovelCard
           novel={novel}
-          key={novel.Id || novel.novel.Id}
+          key={novel.Id || novel?.novel?.Id}
           type={type}
           group={group}
           category={category}
