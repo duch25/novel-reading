@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import SpinnerMini from '../../ui/SpinnerMini';
 import { useParams } from 'react-router-dom';
 import { getAllFileFormats, download } from '../../services/apiDownload';
+import { useNavigateItems } from '../../context/NavigateItemContext';
 
 function DownloadBox() {
   const [types, setTypes] = useState([]);
-
   const [isLoading, setIsLoading] = useState(false);
+  const { curSources } = useNavigateItems();
 
-  const { id, chapter } = useParams();
+  const { novelId, chapterId } = useParams();
 
   const handleDownLoad = (data, fileName, type) => {
     const byteCharacters = atob(data);
@@ -32,15 +33,15 @@ function DownloadBox() {
 
   const handleFetchDownloadRequest = async type => {
     const requestBody = {
-      novel_id: id,
-      chapter_id: chapter,
+      novel_id: novelId,
+      chapter_id: chapterId,
       type: type.toLowerCase(),
-      domain: 'truyen.tangthuvien.vn',
+      domain: curSources[0].Id,
     };
 
     const data = await download(requestBody);
+
     handleDownLoad(data.bytes, data.filename, data.type);
-    // console.log(data);
   };
 
   useEffect(function () {
