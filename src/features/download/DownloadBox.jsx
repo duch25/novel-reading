@@ -36,7 +36,7 @@ function DownloadBox() {
       novel_id: novelId,
       chapter_id: chapterId,
       type: type.toLowerCase(),
-      domain: curSources[0].Id,
+      domain: curSources[0]?.Id,
     };
 
     const data = await download(requestBody);
