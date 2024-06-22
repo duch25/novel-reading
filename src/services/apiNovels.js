@@ -15,7 +15,10 @@ export async function getAllNovels({ category, genre, page, search }) {
 
   const { data: { novels } } = await res.json();
 
-  return novels;
+  // console.log(novels)
+  const actualNovels = novels?.filter(novel => novel.Id !== '');
+
+  return actualNovels;
 }
 
 export async function getNovel(id) {
