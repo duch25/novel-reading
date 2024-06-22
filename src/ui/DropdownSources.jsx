@@ -8,7 +8,7 @@ function DropdownSources() {
   const { curSources, handleReorderSources } = useNavigateItems();
   const [sources, setSources] = useState(curSources);
 
-  let className = `absolute flex-wrap flex flex-col gap-4 rounded-md border-t border-white bg-white px-3 py-4 text-sm text-gray-950 divide-y divide-200-stone`;
+  let className = `z-10 absolute flex-wrap flex flex-col gap-4 rounded-md border-t border-white bg-white px-3 py-4 text-sm text-gray-950 divide-y divide-200-stone`;
   let height = sources.length * 32 + 32 + 1;
   height = `[${height}px]`;
   className += ` h-${height}`;

@@ -6,7 +6,7 @@ function DropdownGenres() {
   const { genres } = useNavigateItems();
 
   let options = genres;
-  let className = `absolute flex-wrap flex flex-col gap-4 rounded-md border-t border-white bg-white px-3 py-4 text-sm text-gray-950`;
+  let className = `z-10 absolute flex-wrap flex flex-col gap-4 rounded-md border-t border-white bg-white px-3 py-4 text-sm text-gray-950`;
 
   let height = options.length * 32 + 32 + 1;
   height = `[${height}px]`;

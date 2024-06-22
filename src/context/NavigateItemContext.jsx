@@ -23,7 +23,12 @@ function reducer(state, action) {
     case 'leave':
       return { ...state, hoveredItem: '' };
     case 'genres/loaded':
-      return { ...state, isLoading: false, genres: action.payload };
+      return {
+        ...state,
+        isLoading: false,
+        genres: action.payload,
+        isSourceChanged: false,
+      };
     case 'sources/loaded':
       return {
         ...state,
@@ -56,50 +61,38 @@ function NavigateItemsProvider({ children }) {
     dispatch({ type: 'sources/reorder', payload: newOrderSources });
   };
 
+  useEffect(function () {
+    async function fetchSources() {
+      dispatch({ type: 'loading' });
+
+      const sources = await getAllSources();
+      const genres = await getAllGenres();
+
+      dispatch({ type: 'genres/loaded', payload: genres });
+      dispatch({ type: 'sources/loaded', payload: sources });
+    }
+
+    fetchSources();
+  }, []);
+
   useEffect(
     function () {
       async function fetchReorderSources() {
         let requestBody = [...curSources]?.map(source => source?.Id);
         requestBody = { sources: requestBody };
 
-        const sources = await reorderSources(requestBody);
-      }
-
-      if (curSources.length === 0) return;
-
-      fetchReorderSources();
-    },
-    [curSources],
-  );
-
-  useEffect(
-    function () {
-      async function fetchGenres() {
-        dispatch({ type: 'loading' });
-
+        await reorderSources(requestBody);
         const genres = await getAllGenres();
 
         dispatch({ type: 'genres/loaded', payload: genres });
       }
 
-      if (isSourceChanged === false && genres.length > 0) return;
+      if (!isSourceChanged) return;
 
-      fetchGenres();
+      fetchReorderSources();
     },
-    [isSourceChanged],
+    [curSources],
   );
-
-  useEffect(function () {
-    async function fetchSources() {
-      dispatch({ type: 'loading' });
-
-      const sources = await getAllSources();
-
-      dispatch({ type: 'sources/loaded', payload: sources });
-    }
-
-    fetchSources();
-  }, []);
 
   return (
     <NavigateItemsContext.Provider
