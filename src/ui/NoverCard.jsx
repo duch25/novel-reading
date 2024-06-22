@@ -47,7 +47,7 @@ function NovelCard({ novel, type, group, category }) {
             <img src={coverImage} className="h-full w-1/2" alt="novel cover" />
             <div className="flex flex-col justify-between">
               <h3 className="text-sm font-semibold">
-                {title?.length > 30 ? title.slice(0, 30) + '...' : title}
+                {title?.length > 25 ? title.slice(0, 25) + '...' : title}
               </h3>
               <p className="text-xs font-medium">
                 Đọc tiếp{' '}

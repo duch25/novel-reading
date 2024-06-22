@@ -13,12 +13,12 @@ export async function getAllNovels({ category, genre, page, search }) {
 
   if (!res.ok) throw Error('Failed getting novels');
 
-  const { data: { novels } } = await res.json();
+  const { data: { novels, numPage } } = await res.json();
 
   // console.log(novels)
   const actualNovels = novels?.filter(novel => novel.Id !== '');
 
-  return actualNovels;
+  return { novels: actualNovels, numPage };
 }
 
 export async function getNovel(id) {

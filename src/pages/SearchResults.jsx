@@ -4,17 +4,22 @@ import { useSearchParams } from 'react-router-dom';
 import { getAllNovels } from '../services/apiNovels';
 import Spinner from '../ui/Spinner';
 import NovelsGrid from '../ui/NovelsGrid';
+import Pagination from '../ui/Pagination';
 
 function SearchResults() {
   const [searchParams] = useSearchParams();
-  const [searchedNovels, setSearchedNovels] = useState([]);
+  const [searchedNovelsData, setSearchedNovelsData] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
   const genre = searchParams.get('genre');
   const name = searchParams.get('name');
+  const source = searchParams.get('source');
   let search = searchParams.get('q');
 
   if (search) search = search.replace(/%20/g, '+');
+
+  const totalPages = searchedNovelsData?.numPage;
 
   useEffect(
     function () {
@@ -24,17 +29,18 @@ function SearchResults() {
         const novelsData = await getAllNovels({
           genre: genre,
           search: search,
+          page: currentPage,
         });
-        setSearchedNovels(novelsData);
+        setSearchedNovelsData(novelsData);
 
         setIsLoading(false);
       }
 
-      if (!genre && !search) return;
+      if (!genre && !search && !source) return;
 
       getNovels();
     },
-    [genre, search],
+    [genre, search, source, currentPage],
   );
 
   if (isLoading) return <Spinner />;
@@ -42,14 +48,30 @@ function SearchResults() {
   return (
     <div className="mt-5">
       {genre && (
-        <NovelsGrid title={`Thể loại ${name}`} novels={searchedNovels} />
+        <NovelsGrid
+          title={`Thể loại ${name}`}
+          novels={searchedNovelsData?.novels}
+        >
+          <Pagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={page => setCurrentPage(page)}
+          />
+        </NovelsGrid>
       )}
       {search && (
         <NovelsGrid
           title={`Kết quả tìm kiếm cho "${search}"`}
           iconTitle="search-outline"
-          novels={searchedNovels}
-        />
+          novels={searchedNovelsData?.novels}
+        >
+          {' '}
+          <Pagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={page => setCurrentPage(page)}
+          />
+        </NovelsGrid>
       )}
     </div>
   );
