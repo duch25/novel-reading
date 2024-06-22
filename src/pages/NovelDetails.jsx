@@ -72,7 +72,7 @@ function NovelDescription({ novel }) {
     <>
       <h2 className="mb-4 text-xl font-semibold">{title}</h2>
       <div className="mb-10 flex rounded-lg bg-sky-100 px-8 py-6 shadow-md">
-        <img className="h-48" src={coverImage} alt="novel cover" />
+        <img className="mr-3 h-48" src={coverImage} alt="novel cover" />
         <div className="flex grow flex-col justify-between">
           <div className="flex justify-around">
             <div className="flex flex-col gap-3">
@@ -89,7 +89,16 @@ function NovelDescription({ novel }) {
                 </span>
               </p>
               <p>
-                <span className="font-medium">Tóm tắt: </span> {description}
+                <span className="font-medium">Tóm tắt: </span>{' '}
+                <div
+                  className="preformatted"
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      description?.length > 400
+                        ? description.slice(0, 400) + '...'
+                        : description,
+                  }}
+                ></div>
               </p>
             </div>
 
@@ -101,7 +110,7 @@ function NovelDescription({ novel }) {
             </div>
           </div>
 
-          <div className="flex justify-around text-sm">
+          <div className="mt-4 flex justify-around text-sm">
             <Button
               onClick={() => navigate(`/reading/${id}/${novel.Chapters[0].Id}`)}
             >
