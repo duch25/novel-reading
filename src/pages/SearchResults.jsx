@@ -23,6 +23,13 @@ function SearchResults() {
 
   useEffect(
     function () {
+      setCurrentPage(1);
+    },
+    [genre],
+  );
+
+  useEffect(
+    function () {
       async function getNovels() {
         setIsLoading(true);
 
